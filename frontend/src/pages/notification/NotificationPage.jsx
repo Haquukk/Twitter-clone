@@ -9,6 +9,7 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
+import { FaMessage } from "react-icons/fa6";
 
 const NotificationPage = () => {
   const queryClient = useQueryClient();
@@ -31,8 +32,7 @@ const NotificationPage = () => {
     },
   });
 
-
-	const { mutate: deleteNotifications } = useMutation({
+  const { mutate: deleteNotifications } = useMutation({
     mutationFn: async () => {
       try {
         const res = await fetch("/api/notifications", {
@@ -100,6 +100,9 @@ const NotificationPage = () => {
               {notification.type === "like" && (
                 <FaHeart className="w-7 h-7 text-red-500" />
               )}
+              {notification.type === "comment" && (
+                <FaMessage className="w-7 h-7 text-primary" />
+              )}
               <Link
                 to={`/profile/${notification.from.username}`}
               >
@@ -117,9 +120,12 @@ const NotificationPage = () => {
                   <span className="font-bold">
                     @{notification.from.username}
                   </span>{" "}
-                  {notification.type === "follow"
-                    ? "followed you"
-                    : "liked your post"}
+                  {notification.type === "follow" &&
+                    "followed you"}
+                  {notification.type === "like" &&
+                    "liked your post"}
+                  {notification.type === "comment" &&
+                    "commented on your post"}
                 </div>
               </Link>
             </div>
