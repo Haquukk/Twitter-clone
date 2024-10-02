@@ -29,7 +29,7 @@ const NotificationPage = () => {
         console.log(err);
         throw new Error(err);
       }
-    },
+    }, 
   });
 
   const { mutate: deleteNotifications } = useMutation({
