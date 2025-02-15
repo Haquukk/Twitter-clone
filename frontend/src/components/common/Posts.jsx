@@ -1,7 +1,8 @@
 import Post from "./Post";
 import PostSkeleton from "../skeletons/PostSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import CreatePost from "../../pages/home/CreatePost";
 
 const Posts = ({ feedType, username, userId }) => {
   const getPostsEndPoint = () => {
@@ -20,6 +21,13 @@ const Posts = ({ feedType, username, userId }) => {
   };
 
   const POST_ENDPOINT = getPostsEndPoint();
+  const [createPost, setCreatePost] = useState(false);
+
+  const { data: authUser } = useQuery({
+    queryKey: ["authUser"],
+  });
+
+  const isMyprofile = authUser._id === userId;
 
   const {
     data: posts,
@@ -54,7 +62,18 @@ const Posts = ({ feedType, username, userId }) => {
         </div>
       )}
       {!isLoading && posts?.length === 0 && (
-        <p className="text-center my-4">No posts in this tab. Switch 👻</p>
+        <>
+          <p className="text-center my-4">No posts in this tab. Switch 👻</p>
+          <button
+            className={` bg-primary text-white px-3 py-2 rounded-full mx-auto block mt-4 ${
+              createPost ? "hidden" : ""
+            }`}
+            onClick={() => setCreatePost(true)}
+          >
+            {!createPost && "Create post"}
+          </button>
+          {isMyprofile && createPost ? <CreatePost/> : ""}
+        </>
       )}
       {!isLoading && posts && (
         <div>
